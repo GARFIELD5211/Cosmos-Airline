@@ -6,6 +6,7 @@
 #include<vector>
 #include<fstream>   
 #include <ctime> 
+#include<algorithm>
 
 using namespace std;
 
@@ -14,8 +15,8 @@ int f, c, c2, f1, n, p=0, pp, bol, categ, seat;
 
 string destination, departure;
 
-vector <string> ideparture = { "LA","Tokyo","London","Paris","Karachi", "Lahore", "Islamabad","Bejeing","Dubai","Berlin","Toronto","Sydney" };
-vector <string> idestination = { "Toronto","LA","Tokyo","London","Paris","Bejeing","Dubai","Berlin","Sydney" };
+vector <string> ideparture = { "Lasvegas","Tokyo","London","Paris","Karachi", "Lahore", "Islamabad","Bejeing","Dubai","Berlin","Toronto","Sydney" };
+vector <string> idestination = { "Toronto","Lasvegas","Tokyo","London","Paris","Bejeing","Dubai","Berlin","Sydney" };
 vector <string> fdeparture = { "Karachi", "Lahore", "Islamabad" , "Faisalabad", "Multan", "Quetta", "Peshawar" };
 vector <string> fdestination = { "Karachi", "Lahore", "Islamabad" ,  "Faisalabad", "Multan", "Quetta", "Peshawar" };
 vector <string> userNames;
@@ -39,74 +40,25 @@ int generateRandomID() ;
 
 int main()
 {
+    // Initialization of Bussiness Class seats
     for (int k = 1;k <= 40;k++)
     {
         bseats[k] = k;
     }
+    // Initialization of  Economy Class seats
     for (int k = 1;k < 80;k++)
     {
         seats[k] = k;
     }
-
-    cout << "|-----------------------------:WELCOME TO COSMOS AIRLINES:---------------------------|" << endl;
-    cout << "|                                                                                    |" << endl;
-    cout << "|          CCCCC    OOOOOO      SSSSS     M     M    OOOOOO      SSSSS               |" << endl;
-    cout << "|         C        O      O    S     S    MM   MM   O      O    S     S              |" << endl;
-    cout << "|         C        O      O    S          M M M M   O      O    S                    |" << endl;
-    cout << "|         C        O      O     SSSSS     M  M  M   O      O     SSSSS               |" << endl;
-    cout << "|         C        O      O          S    M     M   O      O          S              |" << endl;
-    cout << "|         C        O      O    S     S    M     M   O      O    S     S              |" << endl;
-    cout << "|          CCCCC    OOOOOO      SSSSS     M     M    OOOOOO      SSSSS               |" << endl;
-    cout << "|                                                                                    |" << endl;
-    cout << "|===========================================================:COSMOS AIRLINES LTD:====|" << endl;
-
-cout<<"\n\n\n";
-    while(!(n<1 && n>4)){
-    cout << "Please select an option below: ";
-    cout << "\n(1)Booking   ";
-    cout << "\n(2)Packages   ";
-    cout << "\n(3)Flight Routes ";
-    cout << "\n(4)EXIT \n";
-    cout<< "Enter Choice: ";    
-    cin >> n;
-    switch (n)
-    {
-    case 1:
-        cout << "Press (1) for DOMESTIC FLIGHTS\nPress (2) for INTERNATIONAL FLIGHTS\n";
-        cin >> f1;
-        switch (f1)
-        {
-        case 1:
-            dflights();
-            break;
-        case 2:
-            iflights();
-            break;
-        default:
-            exit(0);
-        }
-        userInput();
-        break;
-    case 2:
-        packages();
-        userInput();
-        break;
-    case 3:
-        routes();
-        break;
-    case 4:
-       bye();
-        break;
-    default:
-        system("cls"); 
-        cout<< "  !!!  INVALID INPUT  !!!  press 4 to exit \n\n";
-    }
-    }
+    menu();
     return 0;
 }
 
 void menu()
 {
+
+      // Main Menu 
+      
     cout << "|-----------------------------:WELCOME TO COSMOS AIRLINES:---------------------------|" << endl;
     cout << "|                                                                                    |" << endl;
     cout << "|          CCCCC    OOOOOO      SSSSS     M     M    OOOOOO      SSSSS               |" << endl;
@@ -119,20 +71,25 @@ void menu()
     cout << "|                                                                                    |" << endl;
     cout << "|===========================================================:COSMOS AIRLINES LTD:====|" << endl;
     cout<<"\n\n\n";
-    while(!(n<1 && n>5)){
+    while(!(n<1 && n>4 )){
     cout << "Please select an option below: ";
     cout << "\n(1)Booking   ";
     cout << "\n(2)Packages   ";
     cout << "\n(3)Flight Routes ";
-    cout << "\n(4)Tickets    ";
-    cout << "\n(5)EXIT \n";
+    // Check condition if username is available or not 
+    if(!userNames.empty())
+        cout << "\n(4)Print Tickets";
+    cout << "\n(0)EXIT \n";
     cout<< "Enter Choice: ";    
     cin >> n;
     switch (n)
     {
     case 1:
+    // Domestic or Internaltional Flights 
         cout << "Press (1) for DOMESTIC FLIGHTS\nPress (2) for INTERNATIONAL FLIGHTS\n";
-        cin >> f1;
+        while(!(f1 == 1 || f1==2)){
+            cout<<"Enter Choice: ";
+            cin >> f1;
         switch (f1)
         {
         case 1:
@@ -142,7 +99,8 @@ void menu()
             iflights();
             break;
         default:
-            exit(0);
+            cout<<"!!! INVALLID INPUT !!!\n";
+        }
         }
         userInput();
         break;
@@ -154,53 +112,69 @@ void menu()
         routes();
         break;
     case 4:
+    
         tickets();
         break;
-    case 5:
+    case 0:
         bye();
         break;
     default:
         system("cls"); 
-        cout<< "  !!!  INVALID INPUT  !!!  press 5 to exit \n\n";
+        cout<< "  !!!  INVALID INPUT  !!!  press 0 to exit \n\n";
     }
     }
 }
 
 void dflights()
 {
+    srand(time(0));
     system("cls");
+    int randomID = generateRandomID();
 
     bol = 0;
-    cout << "===================Please Select Your DEPARTURE=================================\n";
+
+    // Prints the departures   
+     while(bol!=1)
+    {  
+    cout << "===================Please Select Your departure=================================\n";
     for (int i = 0;i < fdeparture.size();i++)
     {
         cout << i + 1 << ". " << fdeparture[i];
         cout << endl;
     }
-    cout << "\n\tEnter City Name: ";
+
+    cout<<"Enter City Name: ";
     cin >> departure;
     cin.ignore();
-
+    
+    // Convert departure's first to uppercase
+        departure[0] = toupper(departure[0]);
+    // Convert departure's rest to lowercase
+        transform(departure.begin() + 1, departure.end(), departure.begin() + 1, ::tolower);
+       
     for (int i = 0;i < fdeparture.size(); i++)
     {
         if (departure == fdeparture[i])
-        {
+        {   
             bol = 1;
         }
     }
     switch (bol)
     {
     case 1:
+        goto label;
         break;
     case 0:
-        cout << "\n\tError Invalid Input Please try again";
-        exit(0);
     default:
-        exit(0);
+        system("cls");
+        cout << "\n\tError Invalid Input Please try again";
     }
-    
+    }
+    label:
     system("cls");
+
     bol = 0;
+    while(bol!=1){
     cout << "===================Please Select Your DESTINATION================================\n";
     for (int i = 0;i < fdestination.size();i++)
     {
@@ -210,7 +184,10 @@ void dflights()
     cout << "\n\tEnter City Name: ";
     cin >> destination;
     cin.ignore();
-
+    // Convert destination's first to uppercase
+        destination[0] = toupper(destination[0]);
+    // Convert destination's rest to lowercase
+        transform(destination.begin() + 1, destination.end(), destination.begin() + 1, ::tolower);
     for (int i = 0;i < fdestination.size() ;i++)
     {
         if (destination == fdestination[i])
@@ -222,36 +199,39 @@ void dflights()
     {
     case 1:
         break;
-    case 0:
-        cout << "\n\tError Invalid Input Please try again";
-        exit(0);
+     case 0:
+        goto label1;
     default:
-        exit(0);
+        system("cls");
+        cout << "\n\tError Invalid Input Please try again";
     }
-
+    }
+    label1:
     system("cls");
 
     cout << "======================================Available Flights=======================================\n";
-    cout << "--------------FLIGHT #1---------------\n"
+    
+    cout << "--------------FLIGHT #1--------\n"
         << departure << " to " << destination
-        << "\nTimings:   02:00 PM -- 09:30 PM"
-        << "\n price = $350\n"
-        << "                   Flight ID:340995788\n"
+        << "\nTimings:   02:00 PM -- 09:30 randomIDandomID " 
+        << "\n price = $500\n"      
+        << "                  Flight ID:" << randomID<<"\n" 
         << "--------------------------------------\n\n\n";
 
-    cout << "--------------FLIGHT #2---------------\n"
+    cout<< "--------------FLIGHT #2---------------\n"
         << departure << " to " << destination
         << "\nTimings:   01:00 AM -- 08:30 AM"
-        << "\n price = $199\n"
-        << "                   Flight ID:340990856\n"
+        << "\n price = $500\n"
+        << "                  Flight ID:"<<randomID<<"\n"
         << "--------------------------------------\n\n\n";
+
 
     cout << "--------------FLIGHT #3---------------\n"
         << departure << " to " << destination
         << "\nTimings:   05:00 PM -- 011:30 PM"
         << "\n price = $500\n"
-        << "                  Flight ID:3409245524\n"
-        << "--------------------------------------\n\n\n";
+        << "                  Flight ID:"<<randomID<<"\n"
+        << "--------------------------------------\n\n\n";      
 
     cout << "Choose Flight : ";
     cin >> f;
@@ -294,8 +274,12 @@ void dflights()
 void iflights()
 {
     system("cls");
+    srand(time(0));
+    int randomID = generateRandomID();
+
     bol = 0;
-    cout << "===================Please Select Your DEPARTURE=================================\n";
+    while(bol!=1){
+    cout << "===================Please Select Your departure=================================\n";
     for (int i = 0;i < ideparture.size();i++)
     {
         cout << i + 1 << ". " << ideparture[i];
@@ -305,6 +289,10 @@ void iflights()
     cin >> departure;
     cin.ignore();
 
+     // Convert departure's first to uppercase
+        departure[0] = toupper(departure[0]);
+    // Convert departure's rest to lowercase
+        transform(departure.begin() + 1, departure.end(), departure.begin() + 1, ::tolower);
     for (int i = 0;i < ideparture.size() ;i++)
     {
         if (departure == ideparture[i])
@@ -315,17 +303,19 @@ void iflights()
     switch (bol)
     {
     case 1:
+        goto label2;
         break;
     case 0:
-        cout << "\n\tError Invalid Input Please try again";
-        exit(0);
     default:
-        exit(0);
-    }
-
-    
     system("cls");
+        cout << "\n\tError Invalid Input Please try again";
+    }
+    }
+    label2:
+        system("cls");
+
     bol = 0;
+    while(bol!=1){
     cout << "===================Please Select Your DESTINATION================================\n";
     for (int i = 0;i < idestination.size() ;i++)
     {
@@ -335,7 +325,10 @@ void iflights()
     cout << "\n\tEnter City Name: ";
     cin >> destination;
     cin.ignore();
-
+     // Convert destination's first to uppercase
+        destination[0] = toupper(destination[0]);
+    // Convert destination's rest to lowercase
+        transform(destination.begin() + 1, destination.end(), destination.begin() + 1, ::tolower);
     for (int i = 0;i < idestination.size() ;i++)
     {
         if (destination == idestination[i])
@@ -346,38 +339,45 @@ void iflights()
     switch (bol)
     {
     case 1:
+        goto label3;
         break;
-    case 0:
-        cout << "\n\tError Invalid Input Please try again";
-        exit(0);
+    case 0:   
     default:
-        exit(0);
+        system("cls");
+        cout << "\n\tError Invalid Input Please try again";
+    
     }
-
+    }
+    label3:
     system("cls");
 
-
     cout << "======================================Available Flights=======================================\n";
-    cout << "--------------FLIGHT #1---------------\n"
+
+    cout << "--------------FLIGHT #1-------\n"
         << departure << " to " << destination
-        << "\nTimings:   02:00 PM -- 09:30 PM"
-        << "\n price = $350\n"
-        << "                   Flight ID:340995788\n"
+        << "\nTimings:   02:00 PM -- 09:30 randomIDandomID " 
+        << "\n price = $500\n"      
+        << "                  Flight ID:" << randomID<<"\n" 
         << "--------------------------------------\n\n\n";
 
-    cout << "--------------FLIGHT #2---------------\n"
+    cout<< "--------------FLIGHT #2---------------\n"
         << departure << " to " << destination
         << "\nTimings:   01:00 AM -- 08:30 AM"
-        << "\n price = $199\n"
-        << "                   Flight ID:340990856\n"
+        << "\n price = $500\n"
+        << "                  Flight ID:"<<randomID<<"\n"
         << "--------------------------------------\n\n\n";
+
 
     cout << "--------------FLIGHT #3---------------\n"
         << departure << " to " << destination
         << "\nTimings:   05:00 PM -- 011:30 PM"
         << "\n price = $500\n"
-        << "                  Flight ID:3409245524\n"
-        << "--------------------------------------\n\n\n";
+        << "                  Flight ID:"<<randomID<<"\n"
+        << "--------------------------------------\n\n\n"; 
+
+    cout << "Choose Flight : ";
+    cin >> f;
+    system("cls");
 
     cout << "Choose Flight : ";
     cin >> f;
@@ -419,9 +419,9 @@ void iflights()
 }
 
 void userInput()
-{
+{   
     system("cls");
-
+    while((p == 2 && seat != 5) || (p == 3 && seat != 2)){
     cout << "Enter number of seats: ";
     cin >> seat;
     cin.ignore();
@@ -429,14 +429,14 @@ void userInput()
     if (p == 2 && seat != 5)
     {
         cout << "ONLY 5 SEATS ALLOWED IN FAMILY PACKAGE";
-        exit(0);
+       
     }
     if (p == 3 && seat != 2)
     {
         cout << "ONLY 2 SEATS ALLOWED IN HONEYMOON PACKAGE";
-        exit(0);
+    }   
     }
- 
+    system("cls");
     for (int i = 1; i <= seat; i++)
     {
         system("cls");
@@ -644,7 +644,7 @@ void packages()
     cout << "|                                                               FLY-COSMOS |\n";
     cout << "|--------------------------------------------------------------------------|\n\n";
     
-    while(!(p>1 && p<3))    
+    while(!(p>=1 && p<=3))    
     {
     cout << "Enter Package: ";
     cin >> p;
@@ -708,6 +708,7 @@ int randomID = generateRandomID();
         }
     ticketFile.flush();
     ticketFile.close();
+    cout<<"Your Tickets have been printed!";
     }
 
     cout << "Enter 1 to continue\nEnter 2 to exit\n";
@@ -752,7 +753,7 @@ void routes()
 {
     system("cls");
     cout << setw(45) << setfill('=') << "" << endl;
-    cout << setfill(' ') << left << setw(10) << "Flight" << setw(20) << "Departure" << setw(20) << "Arrival" << endl;
+    cout << setfill(' ') << left << setw(10) << "Flight" << setw(20) << "departure" << setw(20) << "Arrival" << endl;
 
     for (int i = 0; i < idestination.size();i++)
     {
