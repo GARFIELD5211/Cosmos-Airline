@@ -37,9 +37,11 @@ void iflights();
 void packages();
 void bye();
 int generateRandomID() ;
+string currentTime(); 
 
 int main()
 {
+
     // Initialization of Bussiness Class seats
     for (int k = 1;k <= 40;k++)
     {
@@ -52,6 +54,7 @@ int main()
     }
     menu();
     return 0;
+
 }
 
 void menu()
@@ -264,11 +267,12 @@ void dflights()
 
     cout << "Press (1) to proceed\nPress (2) to exit\n";
     cin >> c;
-    if (c == 2)
+    if (c == 1)
     {
-        bye();
+        userInput();
     }
-
+    else 
+     bye (); 
 }
 
 void iflights()
@@ -421,7 +425,7 @@ void iflights()
 void userInput()
 {   
     system("cls");
-    while((p == 2 && seat != 5) || (p == 3 && seat != 2)){
+    
     cout << "Enter number of seats: ";
     cin >> seat;
     cin.ignore();
@@ -435,7 +439,7 @@ void userInput()
     {
         cout << "ONLY 2 SEATS ALLOWED IN HONEYMOON PACKAGE";
     }   
-    }
+    
     system("cls");
     for (int i = 1; i <= seat; i++)
     {
@@ -671,48 +675,117 @@ void packages()
 }
 
 void tickets()
-{    srand(time(0));
-int randomID = generateRandomID();
+{
+    srand(time(0));
+    int randomID = generateRandomID();
+    
     system("cls");
+    
     cout << "===================YOUR TICKETS======================\n\n";
+
     if (!userNames.empty())
     {
+        while (true)
+        {
+            cout << "Current Passenger Details:\n\n";
+
+            for (int i = 0; i < userNames.size(); i++)
+            {
+                cout << "Passenger #" << i + 1 << "\n";
+                cout << " Name   : " << userNames[i] << "\n";
+                cout << " Age    : " << age[i] << "\n";
+                cout << " Gender : " << gender[i] << "\n";
+                cout << " Seat # : " << seatN[i] << "\n\n";
+            }
+
+            cout << "Do you want to edit any information?\n";
+            cout << "1. Yes\n2. No\n";
+            int choice;
+            cin >> choice;
+            cin.ignore();
+
+            if (choice == 2)
+            {
+                break;
+            }
+            else if (choice == 1)
+            {
+                cout << "Enter the passenger number to edit (1 to " << userNames.size() << "): ";
+                int passengerNum;
+                cin >> passengerNum;
+                cin.ignore();
+
+                if (passengerNum < 1 || passengerNum > userNames.size())
+                {
+                    cout << "Invalid passenger number!\n";
+                    continue;
+                }
+
+                int index = passengerNum - 1;
+
+                cout << "Editing information for Passenger #" << passengerNum << "\n";
+
+                cout << "Enter new name (current: " << userNames[index] << "): ";
+                getline(cin, userNames[index]);
+
+                cout << "Enter new age (current: " << age[index] << "): ";
+                cin >> age[index];
+                cin.ignore();
+
+                cout << "Enter new gender (current: " << gender[index] << ") (m/f): ";
+                cin >> gender[index];
+                cin.ignore();
+
+                cout << "Enter new seat number (current: " << seatN[index] << "): ";
+                cin >> seatN[index];
+                cin.ignore();
+
+                cout << "Information updated successfully!\n\n";
+            }
+            else
+            {
+                cout << "Invalid choice!\n";
+            }
+        }
+
         fstream ticketFile("Tickets.txt", ios::out | ios::app); 
         if (ticketFile.fail())
         {
-           cout << "Error: Unable to open file for writing!";
-           exit(1);
+            cout << "Error: Unable to open file for writing!";
+            exit(1);
         }
 
-        for (int i = 0;i < userNames.size();i++)
+        for (int i = 0; i < userNames.size(); i++)
         {
-            cout << "|----------------TICKET #"<<i+1<<"-----------------------|\n";
-            ticketFile << "|----------------TICKET #"<<i+1<<"-----------------------|\n";
-            cout << " Name #" << i + 1 << ": " << userNames[i] << "\n";
-            ticketFile << " Name #" << i + 1 << ": " << userNames[i] << "\n";
-            cout << " age    " << ": " << age[i] << "\n";
-            ticketFile << " age    " << ": " << age[i] << "\n";
-            cout << " gender " << ": " << gender[i]<<"\n";
-            ticketFile << " gender " << ": " << gender[i]<<"\n";
-            cout << " Seat # " << ": " << seatN[i] <<"\n";
-            ticketFile<< " Seat # " << ": " << seatN[i]<<"\n";
-            cout << " FROM: "<< departure << "\tTO: " <<destination<<"\n";
-            ticketFile<< " FROM: "<< departure << "\tTO: " <<destination<<"\n";
-            cout << "                              Flight ID:"<<(randomID+i)<<"\n";
-            ticketFile<< "                              Flight ID:"<<(randomID+i)<<"\n";
-            cout << " price = $500(VAT inclusive)\n";
-            ticketFile << " price = $500(VAT inclusive)\n";
-            cout << "|------------------------------------------------|";
-            ticketFile << "|------------------------------------------------|\n\n\n";
-            cout << "\n\n\n";
+            cout << "|----------------TICKET #" << i + 1 << "-----------------------|\n";
+            ticketFile << "|----------------TICKET #" << i + 1 << "-----------------------|\n";
+            cout << " Name   : " << userNames[i] << "\n";
+            ticketFile << " Name   : " << userNames[i] << "\n";
+            cout << " Age    : " << age[i] << "\n";
+            ticketFile << " Age    : " << age[i] << "\n";
+            cout << " Gender : " << gender[i] << "\n";
+            ticketFile << " Gender : " << gender[i] << "\n";
+            cout << " Seat # : " << seatN[i] << "\n";
+            ticketFile << " Seat # : " << seatN[i] << "\n";
+            cout << " FROM   : " << departure << "\tTO: " << destination << "\n";
+            ticketFile << " FROM   : " << departure << "\tTO: " << destination << "\n";
+            cout << "                              Flight ID: " << (randomID + i) << "\n";
+            ticketFile << "                              Flight ID: " << (randomID + i) << "\n";
+            cout << " Price = $500 (VAT inclusive)\n";
+            ticketFile << " Price = $500 (VAT inclusive)\n";
+            cout << "|---------------------------(" << currentTime() << ")-|\n\n\n";
+            ticketFile << "|---------------------------(" << currentTime() << ")-|\n\n\n";
         }
-    ticketFile.flush();
-    ticketFile.close();
-    cout<<"Your Tickets have been printed!";
+
+        ticketFile.flush();
+        ticketFile.close();
+
+        cout << "Your Tickets have been printed!\n";
     }
 
     cout << "Enter 1 to continue\nEnter 2 to exit\n";
     cin >> pp;
+
     if (pp == 1)
     {
         system("cls");
@@ -723,6 +796,7 @@ int randomID = generateRandomID();
         bye();
     }
 }
+
 
 void bye()
 {
@@ -782,4 +856,13 @@ void routes()
 
 int generateRandomID() {
     return 1000000 + rand() % 9000000; 
+}
+string currentTime() {
+    time_t now = time(0);            // Get current time
+    tm* localTime = localtime(&now); // Convert to local time
+
+    char buffer[80];
+    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", localTime);
+
+    return string(buffer); // Return formatted time as a string
 }
